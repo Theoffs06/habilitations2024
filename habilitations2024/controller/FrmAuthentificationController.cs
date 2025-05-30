@@ -1,25 +1,21 @@
 ﻿using habilitations2024.dal;
 using habilitations2024.model;
-using System;
 
-namespace habilitations2024.controller
-{
+namespace habilitations2024.controller {
     /// <summary>
     /// Contrôleur de FrmAuthentification
     /// </summary>
-    class FrmAuthentificationController
-    {
+    internal class FrmAuthentificationController {
         /// <summary>
         /// objet d'accès aux opérations possibles sur Developpeur
         /// </summary>
-        private readonly DeveloppeurAccess developpeurAccess;
+        private readonly DeveloppeurAccess _developpeurAccess;
 
         /// <summary>
         /// Récupère l'acces aux données
         /// </summary>
-        public FrmAuthentificationController()
-        {
-            developpeurAccess = new DeveloppeurAccess();
+        public FrmAuthentificationController() {
+            _developpeurAccess = new DeveloppeurAccess();
         }
 
         /// <summary>
@@ -27,10 +23,8 @@ namespace habilitations2024.controller
         /// </summary>
         /// <param name="admin">objet contenant les informations de connexion</param>
         /// <returns> vrai si les informations de connexion sont correctes</returns>
-        public Boolean ControleAuthentification(Admin admin)
-        {
-            return developpeurAccess.ControleAuthentification(admin);
+        public bool ControleAuthentification(Admin admin) {
+            return _developpeurAccess.ControleAuthentification(admin);
         }
-
     }
 }

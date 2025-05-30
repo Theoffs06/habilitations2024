@@ -2,41 +2,39 @@
 using habilitations2024.model;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace habilitations2024.view
-{
+namespace habilitations2024.view {
     /// <summary>
     /// Fenêtre d'affichage des développeurs et de leurs profils
     /// </summary>
-    public partial class FrmHabilitations : Form
-    {
+    public partial class FrmHabilitations : Form {
         /// <summary>
         /// Booléen pour savoir si une modification est demandée
         /// </summary>
-        private Boolean enCoursDeModifDeveloppeur = false;
+        private bool enCoursDeModifDeveloppeur;
+        
         /// <summary>
         /// Objet pour gérer la liste des développeurs
         /// </summary>
         private readonly BindingSource bdgDeveloppeurs = new BindingSource();
+        
         /// <summary>
         /// Objet pour gérer la liste des profils
         /// </summary>
         private readonly BindingSource bdgProfils = new BindingSource();
+        
         /// <summary>
         /// Controleur de la fenêtre
         /// </summary>
         private FrmHabilitationsController controller;
+        
         /// <summary>
         /// Titre des fenêtres d'information
         /// </summary>
-        private readonly String titreFenetreInformation = "Information";
+        private readonly string titreFenetreInformation = "Information";
+        
         /// <summary>
         /// profil particulier "admin" qui ne peut pas être supprimé
         /// </summary>
@@ -45,8 +43,7 @@ namespace habilitations2024.view
         /// <summary>
         /// construction des composants graphiques et appel des autres initialisations
         /// </summary>
-        public FrmHabilitations()
-        {
+        public FrmHabilitations() {
             InitializeComponent();
             Init();
         }
@@ -55,8 +52,7 @@ namespace habilitations2024.view
         /// Initialisations :
         /// Création du controleur et remplissage des listes
         /// </summary>
-        private void Init()
-        {
+        private void Init() {
             controller = new FrmHabilitationsController();
             RemplirListeDeveloppeurs();
             RemplirListeProfils();
@@ -67,9 +63,8 @@ namespace habilitations2024.view
         /// <summary>
         /// Affiche les développeurs
         /// </summary>
-        private void RemplirListeDeveloppeurs()
-        {
-            List<Developpeur> lesDeveloppeurs = controller.GetLesDeveloppeurs();
+        private void RemplirListeDeveloppeurs() {
+            var lesDeveloppeurs = controller.GetLesDeveloppeurs();
             bdgDeveloppeurs.DataSource = lesDeveloppeurs;
             dgvDeveloppeurs.DataSource = bdgDeveloppeurs;
             dgvDeveloppeurs.Columns["iddeveloppeur"].Visible = false;
@@ -80,9 +75,8 @@ namespace habilitations2024.view
         /// <summary>
         /// Affiche les profils
         /// </summary>
-        private void RemplirListeProfils()
-        {
-            List<Profil> lesProfils = controller.GetLesProfils();
+        private void RemplirListeProfils() {
+            var lesProfils = controller.GetLesProfils();
             bdgProfils.DataSource = lesProfils;
             cboProfil.DataSource = bdgProfils;
         }
@@ -92,20 +86,17 @@ namespace habilitations2024.view
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnDemandeModifDev_Click(object sender, EventArgs e)
-        {
-            if (dgvDeveloppeurs.SelectedRows.Count > 0)
-            {
+        private void BtnDemandeModifDev_Click(object sender, EventArgs e) {
+            if (dgvDeveloppeurs.SelectedRows.Count > 0) {
                 EnCourseModifDeveloppeur(true);
-                Developpeur developpeur = (Developpeur)bdgDeveloppeurs.List[bdgDeveloppeurs.Position];
+                var developpeur = (Developpeur)bdgDeveloppeurs.List[bdgDeveloppeurs.Position];
                 txtNom.Text = developpeur.Nom;
                 txtPrenom.Text = developpeur.Prenom;
                 txtTel.Text = developpeur.Tel;
                 txtMail.Text = developpeur.Mail;
                 cboProfil.SelectedIndex = cboProfil.FindStringExact(developpeur.Profil.Nom);
             }
-            else
-            {
+            else {
                 MessageBox.Show("Une ligne doit être sélectionnée.", titreFenetreInformation);
             }
         }
@@ -115,19 +106,14 @@ namespace habilitations2024.view
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnDemandeSupprDev_Click(object sender, EventArgs e)
-        {
-            if (dgvDeveloppeurs.SelectedRows.Count > 0)
-            {
-                Developpeur developpeur = (Developpeur)bdgDeveloppeurs.List[bdgDeveloppeurs.Position];
-                if (MessageBox.Show("Voulez-vous vraiment supprimer " + developpeur.Nom + " " + developpeur.Prenom + " ?", "Confirmation de suppression", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    controller.DelDeveloppeur(developpeur);
-                    RemplirListeDeveloppeurs();
-                }
+        private void BtnDemandeSupprDev_Click(object sender, EventArgs e) {
+            if (dgvDeveloppeurs.SelectedRows.Count > 0) {
+                var developpeur = (Developpeur)bdgDeveloppeurs.List[bdgDeveloppeurs.Position];
+                if (MessageBox.Show("Voulez-vous vraiment supprimer " + developpeur.Nom + " " + developpeur.Prenom + " ?", "Confirmation de suppression", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+                controller.DelDeveloppeur(developpeur);
+                RemplirListeDeveloppeurs();
             }
-            else
-            {
+            else {
                 MessageBox.Show("Une ligne doit être sélectionnée.", titreFenetreInformation);
             }
         }
@@ -137,14 +123,11 @@ namespace habilitations2024.view
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnDemandeChangePwd_Click(object sender, EventArgs e)
-        {
-            if (dgvDeveloppeurs.SelectedRows.Count > 0)
-            {
+        private void BtnDemandeChangePwd_Click(object sender, EventArgs e) {
+            if (dgvDeveloppeurs.SelectedRows.Count > 0) {
                 EnCoursModifPwd(true);
             }
-            else
-            {
+            else {
                 MessageBox.Show("Une ligne doit être sélectionnée.", titreFenetreInformation);
             }
         }
@@ -154,14 +137,11 @@ namespace habilitations2024.view
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnEnregDev_Click(object sender, EventArgs e)
-        {
-            if (!txtNom.Text.Equals("") && !txtPrenom.Text.Equals("") && !txtTel.Text.Equals("") && !txtMail.Text.Equals("") && cboProfil.SelectedIndex != -1)
-            {
-                Profil profil = (Profil)bdgProfils.List[bdgProfils.Position];
-                if (enCoursDeModifDeveloppeur)
-                {
-                    Developpeur developpeur = (Developpeur)bdgDeveloppeurs.List[bdgDeveloppeurs.Position];
+        private void BtnEnregDev_Click(object sender, EventArgs e) {
+            if (!txtNom.Text.Equals("") && !txtPrenom.Text.Equals("") && !txtTel.Text.Equals("") && !txtMail.Text.Equals("") && cboProfil.SelectedIndex != -1) {
+                var profil = (Profil)bdgProfils.List[bdgProfils.Position];
+                if (enCoursDeModifDeveloppeur) {
+                    var developpeur = (Developpeur)bdgDeveloppeurs.List[bdgDeveloppeurs.Position];
                     developpeur.Nom = txtNom.Text;
                     developpeur.Prenom = txtPrenom.Text;
                     developpeur.Tel = txtTel.Text;
@@ -169,16 +149,14 @@ namespace habilitations2024.view
                     developpeur.Profil = profil;
                     controller.UpdateDeveloppeur(developpeur);
                 }
-                else
-                {
-                    Developpeur developpeur = new Developpeur(0, txtNom.Text, txtPrenom.Text, txtTel.Text, txtMail.Text, profil);
+                else {
+                    var developpeur = new Developpeur(0, txtNom.Text, txtPrenom.Text, txtTel.Text, txtMail.Text, profil);
                     controller.AddDeveloppeur(developpeur);
                 }
                 RemplirListeDeveloppeurs();
                 EnCourseModifDeveloppeur(false);
             }
-            else
-            {
+            else {
                 MessageBox.Show("Tous les champs doivent être remplis.", titreFenetreInformation);
             }
         }
@@ -189,10 +167,8 @@ namespace habilitations2024.view
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnAnnulDev_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Voulez-vous vraiment annuler ?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
+        private void BtnAnnulDev_Click(object sender, EventArgs e) {
+            if (MessageBox.Show("Voulez-vous vraiment annuler ?", "Confirmation", MessageBoxButtons.YesNo) == DialogResult.Yes) {
                 EnCourseModifDeveloppeur(false);
             }
         }
@@ -202,24 +178,19 @@ namespace habilitations2024.view
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnEnregPwd_Click(object sender, EventArgs e)
-        {
-            if (!txtPwd1.Text.Equals("") && !txtPwd2.Text.Equals("") && txtPwd1.Text.Equals(txtPwd2.Text))
-            {
-                if (controller.PwdFort(txtPwd1.Text))
-                {
-                    Developpeur developpeur = (Developpeur)bdgDeveloppeurs.List[bdgDeveloppeurs.Position];
+        private void BtnEnregPwd_Click(object sender, EventArgs e) {
+            if (!txtPwd1.Text.Equals("") && !txtPwd2.Text.Equals("") && txtPwd1.Text.Equals(txtPwd2.Text)) {
+                if (FrmHabilitationsController.PwdFort(txtPwd1.Text)) {
+                    var developpeur = (Developpeur)bdgDeveloppeurs.List[bdgDeveloppeurs.Position];
                     developpeur.Pwd = txtPwd1.Text;
                     controller.UpdatePwd(developpeur);
                     EnCoursModifPwd(false);
                 }
-                else
-                {
+                else {
                     MessageBox.Show("Le pwd doit contenir entre 8 et 30 caractères constitués de : au moins une minuscule, une majuscule, un chiffre, un caractère spécial et pas d'espace", "Information");
                 }
             }
-            else
-            {
+            else {
                 MessageBox.Show("Les 2 zones doivent être remplies et de contenu identique", titreFenetreInformation);
             }
         }
@@ -229,8 +200,7 @@ namespace habilitations2024.view
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnAnnulPwd_Click(object sender, EventArgs e)
-        {
+        private void BtnAnnulPwd_Click(object sender, EventArgs e) {
             EnCoursModifPwd(false);
         }
 
@@ -238,16 +208,13 @@ namespace habilitations2024.view
         /// Modification d'affichage suivant si on est en cours de modif ou d'ajout d'un developpeur
         /// </summary>
         /// <param name="modif"></param>
-        private void EnCourseModifDeveloppeur(Boolean modif)
-        {
+        private void EnCourseModifDeveloppeur(Boolean modif) {
             enCoursDeModifDeveloppeur = modif;
             grbLesDeveloppeurs.Enabled = !modif;
-            if (modif)
-            {
+            if (modif) {
                 grbDeveloppeur.Text = "modifier un développeur";
             }
-            else
-            {
+            else {
                 grbDeveloppeur.Text = "ajouter un développeur";
                 txtNom.Text = "";
                 txtPrenom.Text = "";
@@ -260,8 +227,7 @@ namespace habilitations2024.view
         /// Modification d'affichage suivant si on est ou non en cours de modif du pwd
         /// </summary>
         /// <param name="modif"></param>
-        private void EnCoursModifPwd(Boolean modif)
-        {
+        private void EnCoursModifPwd(bool modif) {
             grbPwd.Enabled = modif;
             grbLesDeveloppeurs.Enabled = !modif;
             grbDeveloppeur.Enabled = !modif;
@@ -275,19 +241,15 @@ namespace habilitations2024.view
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnAddProfil_Click(object sender, EventArgs e)
-        {
-            string nom = txtProfil.Text.ToString().ToLower();
-            if (string.IsNullOrEmpty(nom))
-            {
+        private void BtnAddProfil_Click(object sender, EventArgs e) {
+            var nom = txtProfil.Text.ToLower();
+            if (string.IsNullOrEmpty(nom)) {
                 MessageBox.Show("Saisir un profil", "Information");
             }
-            else if (cboProfil.Items.Cast<Profil>().Any(profil => profil.Nom == nom))
-            {
+            else if (cboProfil.Items.Cast<Profil>().Any(profil => profil.Nom == nom)) {
                 MessageBox.Show("Profil déjà présent dans la liste", "Information");
             }
-            else
-            {
+            else {
                 controller.AddProfil(new Profil(0, nom));
                 txtProfil.Text = "";
                 RemplirListeProfils();
@@ -301,20 +263,15 @@ namespace habilitations2024.view
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnDelProfil_Click(object sender, EventArgs e)
-        {
-            Profil profil = (Profil)bdgProfils.List[bdgProfils.Position];
-            if (profil.Nom.Equals(ADMIN))
-            {
+        private void BtnDelProfil_Click(object sender, EventArgs e) {
+            var profil = (Profil)bdgProfils.List[bdgProfils.Position];
+            if (profil.Nom.Equals(ADMIN)) {
                 MessageBox.Show("Le profil 'admin' ne peut pas être supprimé", "Information");
             }
-            else if (((List<Developpeur>)bdgDeveloppeurs.DataSource).Exists(x => x.Profil.Idprofil == profil.Idprofil))
-            {
+            else if (((List<Developpeur>)bdgDeveloppeurs.DataSource).Exists(x => x.Profil.Idprofil == profil.Idprofil)) {
                 MessageBox.Show("Le profil " + profil.Nom + " ne peut pas être supprimé car il est utilisé");
             }
-            else if (MessageBox.Show("Voulez-vous vraiment supprimer " + profil.Nom + " ?",
-                    "Confirmation de suppression", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
+            else if (MessageBox.Show("Voulez-vous vraiment supprimer " + profil.Nom + " ?", "Confirmation de suppression", MessageBoxButtons.YesNo) == DialogResult.Yes) {
                 controller.DelProfil(profil);
                 RemplirListeProfils();
             }
