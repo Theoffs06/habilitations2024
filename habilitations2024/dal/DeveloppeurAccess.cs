@@ -45,14 +45,18 @@ namespace habilitations2024.dal {
         /// Récupère et retourne les développeurs
         /// </summary>
         /// <returns>liste des développeurs</returns>
-        public List<Developpeur> GetLesDeveloppeurs() {
+        public List<Developpeur> GetLesDeveloppeurs(int idProfil = -1) {
             var lesDeveloppeurs = new List<Developpeur>();
             if (_access.Manager == null) return lesDeveloppeurs;
             var req = "select d.iddeveloppeur as iddeveloppeur, d.nom as nom, d.prenom as prenom, d.tel as tel, d.mail as mail, p.idprofil as idprofil, p.nom as profil ";
             req += "from developpeur d join profil p on (d.idprofil = p.idprofil) ";
+            if (idProfil != -1) req += "where p.idprofil = @idprofil ";
             req += "order by nom, prenom;";
             try {
-                var records = _access.Manager.ReqSelect(req);
+                var parameters = new Dictionary<string, object>();
+                if (idProfil != -1) parameters.Add("@idprofil", idProfil);
+                
+                var records = _access.Manager.ReqSelect(req, parameters);
                 if (records != null) {
                     lesDeveloppeurs.AddRange(from record in records let profil = new Profil((int)record[5], (string)record[6]) select new Developpeur((int)record[0], (string)record[1], (string)record[2], (string)record[3], (string)record[4], profil));
                 }

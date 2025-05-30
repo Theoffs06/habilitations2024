@@ -52,6 +52,7 @@
             this.btnDemandeSupprDev = new System.Windows.Forms.Button();
             this.btnDemandeModifDev = new System.Windows.Forms.Button();
             this.grbLesDeveloppeurs = new System.Windows.Forms.GroupBox();
+            this.cboFiltreProfil = new System.Windows.Forms.ComboBox();
             this.dgvDeveloppeurs = new System.Windows.Forms.DataGridView();
             this.grbPwd.SuspendLayout();
             this.grbDeveloppeur.SuspendLayout();
@@ -288,6 +289,7 @@
             // 
             // grbLesDeveloppeurs
             // 
+            this.grbLesDeveloppeurs.Controls.Add(this.cboFiltreProfil);
             this.grbLesDeveloppeurs.Controls.Add(this.btnDemandeChangePwd);
             this.grbLesDeveloppeurs.Controls.Add(this.btnDemandeSupprDev);
             this.grbLesDeveloppeurs.Controls.Add(this.btnDemandeModifDev);
@@ -298,6 +300,15 @@
             this.grbLesDeveloppeurs.TabIndex = 4;
             this.grbLesDeveloppeurs.TabStop = false;
             this.grbLesDeveloppeurs.Text = "les développeurs";
+            // 
+            // cboFiltreProfil
+            // 
+            this.cboFiltreProfil.FormattingEnabled = true;
+            this.cboFiltreProfil.Location = new System.Drawing.Point(487, 231);
+            this.cboFiltreProfil.Name = "cboFiltreProfil";
+            this.cboFiltreProfil.Size = new System.Drawing.Size(100, 21);
+            this.cboFiltreProfil.TabIndex = 4;
+            this.cboFiltreProfil.SelectedIndexChanged += new System.EventHandler(this.cboFiltreProfil_SelectedIndexChanged);
             // 
             // dgvDeveloppeurs
             // 
@@ -333,6 +344,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvDeveloppeurs)).EndInit();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.ComboBox cboFiltreProfil;
 
         #endregion
 

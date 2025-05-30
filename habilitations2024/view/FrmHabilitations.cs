@@ -24,6 +24,11 @@ namespace habilitations2024.view {
         private BindingSource bdgProfils = new BindingSource();
         
         /// <summary>
+        /// Objet pour gérer le filtre des profils
+        /// </summary>
+        private BindingSource bdgFilterProfils = new BindingSource();
+        
+        /// <summary>
         /// Controleur de la fenêtre
         /// </summary>
         private FrmHabilitationsController controller;
@@ -44,6 +49,7 @@ namespace habilitations2024.view {
             controller = new FrmHabilitationsController();
             RemplirListeDeveloppeurs();
             RemplirListeProfils();
+            RemplirFiltreProfils();
             EnCourseModifDeveloppeur(false);
             EnCoursModifPwd(false);
         }
@@ -51,8 +57,8 @@ namespace habilitations2024.view {
         /// <summary>
         /// Affiche les développeurs
         /// </summary>
-        private void RemplirListeDeveloppeurs() {
-            var lesDeveloppeurs = controller.GetLesDeveloppeurs();
+        private void RemplirListeDeveloppeurs(int idProfil = -1) {
+            var lesDeveloppeurs = controller.GetLesDeveloppeurs(idProfil);
             bdgDeveloppeurs.DataSource = lesDeveloppeurs;
             dgvDeveloppeurs.DataSource = bdgDeveloppeurs;
             dgvDeveloppeurs.Columns["iddeveloppeur"].Visible = false;
@@ -67,6 +73,17 @@ namespace habilitations2024.view {
             var lesProfils = controller.GetLesProfils();
             bdgProfils.DataSource = lesProfils;
             cboProfil.DataSource = bdgProfils;
+        }
+
+        private void RemplirFiltreProfils() {
+            var lesProfils = controller.GetLesProfils();
+            var emptyItem = new Profil(-1, string.Empty);
+            lesProfils.Insert(0, emptyItem);
+            
+            bdgFilterProfils.DataSource = lesProfils;
+            cboFiltreProfil.DataSource = bdgFilterProfils;
+            cboFiltreProfil.DisplayMember = "Nom";
+            cboFiltreProfil.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -99,10 +116,16 @@ namespace habilitations2024.view {
                 var developpeur = (Developpeur)bdgDeveloppeurs.List[bdgDeveloppeurs.Position];
                 if (MessageBox.Show("Voulez-vous vraiment supprimer " + developpeur.Nom + " " + developpeur.Prenom + " ?", "Confirmation de suppression", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
                 controller.DelDeveloppeur(developpeur);
-                RemplirListeDeveloppeurs();
+                if (cboFiltreProfil.SelectedItem is Profil selectedProfil) RemplirListeDeveloppeurs(selectedProfil.Idprofil);
             }
             else {
                 MessageBox.Show("Une ligne doit être sélectionnée.", "Information");
+            }
+        }
+        
+        private void cboFiltreProfil_SelectedIndexChanged(object sender, EventArgs e) {
+            if (cboFiltreProfil.SelectedItem is Profil selectedProfil) {
+                RemplirListeDeveloppeurs(selectedProfil.Idprofil);
             }
         }
 
@@ -141,7 +164,8 @@ namespace habilitations2024.view {
                     var developpeur = new Developpeur(0, txtNom.Text, txtPrenom.Text, txtTel.Text, txtMail.Text, profil);
                     controller.AddDeveloppeur(developpeur);
                 }
-                RemplirListeDeveloppeurs();
+
+                if (cboFiltreProfil.SelectedItem is Profil selectedProfil) RemplirListeDeveloppeurs(selectedProfil.Idprofil);
                 EnCourseModifDeveloppeur(false);
             }
             else {
@@ -191,7 +215,7 @@ namespace habilitations2024.view {
         /// Modification d'affichage suivant si on est en cours de modif ou d'ajout d'un developpeur
         /// </summary>
         /// <param name="modif"></param>
-        private void EnCourseModifDeveloppeur(Boolean modif) {
+        private void EnCourseModifDeveloppeur(bool modif) {
             enCoursDeModifDeveloppeur = modif;
             grbLesDeveloppeurs.Enabled = !modif;
             if (modif) {
