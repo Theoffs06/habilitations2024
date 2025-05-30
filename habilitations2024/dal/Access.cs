@@ -1,25 +1,21 @@
 ﻿using habilitations2024.bddmanager;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace habilitations2024.dal
-{
+namespace habilitations2024.dal {
     /// <summary>
     /// Singleton : classe d'accès à BddManager
     /// </summary>
-    public class Access
-    {
+    public class Access {
         /// <summary>
         /// chaine de connexion à la bdd
         /// </summary>
-        private static readonly string connectionString = "server=localhost;user id=habilitations;password=motdepasseuser;database=habilitations;";
+        private const string ConnectionString = "server=localhost;user id=habilitations;password=motdepasseuser;database=habilitations;";
+
         /// <summary>
         /// instance unique de la classe
         /// </summary>
-        private static Access instance = null;
+        private static Access _instance;
+        
         /// <summary>
         /// Getter sur l'objet d'accès aux données
         /// </summary>
@@ -29,14 +25,11 @@ namespace habilitations2024.dal
         /// Création unique de l'objet de type BddManager
         /// Arrête le programme si l'accès à la BDD a échoué
         /// </summary>
-        private Access()
-        {
-            try
-            {
-                Manager = BddManager.GetInstance(connectionString);
+        private Access() {
+            try {
+                Manager = BddManager.GetInstance(ConnectionString);
             }
-            catch (Exception)
-            {
+            catch (Exception) {
                 Environment.Exit(0);
             }
         }
@@ -45,14 +38,8 @@ namespace habilitations2024.dal
         /// Création d'une seule instance de la classe
         /// </summary>
         /// <returns></returns>
-        public static Access GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new Access();
-            }
-            return instance;
+        public static Access GetInstance() {
+            return _instance ?? (_instance = new Access());
         }
-
     }
 }
