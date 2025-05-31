@@ -56,7 +56,10 @@ namespace habilitations2024.view {
 
         /// <summary>
         /// Affiche les développeurs
+        /// Si un identifiant de profil est fourni, seuls les développeurs associés à ce profil sont affichés.
+        /// Si aucun identifiant de profil n'est fourni ou si l'identifiant est -1, tous les développeurs sont affichés.
         /// </summary>
+        /// <param name="idProfil">L'identifiant du profil pour filtrer les développeurs. Par défaut, -1 (aucun filtre).</param>
         private void RemplirListeDeveloppeurs(int idProfil = -1) {
             var lesDeveloppeurs = controller.GetLesDeveloppeurs(idProfil);
             bdgDeveloppeurs.DataSource = lesDeveloppeurs;
@@ -74,7 +77,10 @@ namespace habilitations2024.view {
             bdgProfils.DataSource = lesProfils;
             cboProfil.DataSource = bdgProfils;
         }
-
+        
+        /// <summary>
+        /// Affiche les profils
+        /// </summary>
         private void RemplirFiltreProfils() {
             var lesProfils = controller.GetLesProfils();
             var emptyItem = new Profil(-1, string.Empty);
@@ -123,6 +129,11 @@ namespace habilitations2024.view {
             }
         }
         
+        /// <summary>
+        /// Demande de rechargement de la liste de dévéloppeurs par rapport au filtre séléctionné
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cboFiltreProfil_SelectedIndexChanged(object sender, EventArgs e) {
             if (cboFiltreProfil.SelectedItem is Profil selectedProfil) {
                 RemplirListeDeveloppeurs(selectedProfil.Idprofil);

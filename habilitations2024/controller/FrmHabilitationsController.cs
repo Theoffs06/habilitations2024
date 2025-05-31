@@ -25,9 +25,12 @@ namespace habilitations2024.controller {
         }
 
         /// <summary>
-        /// Récupère et retourne les infos des développeurs
+        /// Récupère et retourne les informations des développeurs.
+        /// Si un identifiant de profil est fourni, seuls les développeurs associés à ce profil sont retournés.
+        /// Si aucun identifiant de profil n'est fourni ou si l'identifiant est -1, tous les développeurs sont retournés.
         /// </summary>
-        /// <returns>liste des développeurs</returns>
+        /// <param name="idProfil">L'identifiant du profil pour filtrer les développeurs. Par défaut, -1 (aucun filtre).</param>
+        /// <returns>Une liste des développeurs correspondant au filtre.</returns>
         public List<Developpeur> GetLesDeveloppeurs(int idProfil = -1) {
             return _developpeurAccess.GetLesDeveloppeurs(idProfil);
         }
